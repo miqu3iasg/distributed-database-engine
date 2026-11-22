@@ -67,4 +67,4 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for how to contribute and where each 
 
 ## License
 
-To be defined.
+MIT — see [`LICENSE`](./LICENSE).

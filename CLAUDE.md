@@ -17,7 +17,7 @@ The file above is the shared source of truth for every agent. This file only add
 
 ## Where we are
 
-Documentation phase, **no code yet**. Treat the ADRs and the technical specification as the product for now. The next engineering milestone is Phase 0 (see AGENTS.md section 11). Do not scaffold later-phase modules "to save time".
+Phase 0 project setup. Maven multi-module skeleton exists (`geodb-common`, `geodb-env`, `geodb-raft`, `geodb-sim`), CI workflow configured, ArchUnit + forbidden-apis guards configured, `geodb-env` Clock SPI present, ArchUnit determinism-rules test added. The next engineering milestone is completing Phase 0 (CI green, `geodb-env` real + simulated, a reproducible virtual-time "hello world"). Do not scaffold later-phase modules "to save time".
 
 ## How to work in this repo
 

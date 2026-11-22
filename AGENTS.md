@@ -17,7 +17,7 @@ Guidance for AI coding agents working on **GeoDB**. Humans should read the docs 
 
 A distributed, transactional, ordered key-value database written in Java: Multi-Raft ranges, MVCC with a Hybrid Logical Clock, distributed transactions, a custom LSM engine, and a **deterministic simulation** test strategy. The project's goal is deep distributed-systems expertise and **demonstrable correctness**, not record performance and not a new language.
 
-**Current status: documentation phase. No code exists yet.** The next milestone is Phase 0 (Maven skeleton, CI, ArchUnit/forbidden-apis, `geodb-env` real + simulated, a reproducible virtual-time "hello world").
+**Current status: Phase 0 project setup.** Maven multi-module skeleton exists (`geodb-common`, `geodb-env`, `geodb-raft`, `geodb-sim`), CI workflow configured, ArchUnit + forbidden-apis guards configured, `geodb-env` Clock SPI present, ArchUnit determinism-rules test added. The next milestone is completing Phase 0 (CI green, `geodb-env` real + simulated, a reproducible virtual-time "hello world").
 
 ## 2. Read before changing anything
 
@@ -182,10 +182,9 @@ Rules for agents writing tests:
 
 Tooling: Maven multi-module (`maven-enforcer`, own BOM), JUnit 5, AssertJ, jqwik, JCStress, Jazzer, PIT, ArchUnit, forbidden-apis, JMH, HdrHistogram, Micrometer, OpenTelemetry, SLF4J + Logback (JSON), Docker/Testcontainers, Toxiproxy, TLA+/TLC, GitHub Actions.
 
-> The build does not exist yet. The commands below are **targets**; confirm they exist before running them, and update this section when Phase 0 lands.
-
 ```
 mvn -q verify                                              # full build incl. ArchUnit/forbidden-apis
+mvn -pl geodb-common test -Dtest=DeterminismRules          # ArchUnit determinism rules
 mvn -pl geodb-sim exec:java -Dseeds=0..1000000             # simulation campaign (from the spec)
 ```
 

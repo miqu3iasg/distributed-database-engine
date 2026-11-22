@@ -79,6 +79,7 @@ specs/tla      TLA+ specs
 
 - Dependencies flow downward: `server -> txn -> range -> mvcc -> storage`; `raft` is consumed by `range`.
 - **Core modules** = `raft`, `range`, `txn`, `mvcc`, `cluster`. They may touch time, randomness, network, disk or threads **only** through `geodb-env`.
+- `geodb-storage` is **not** a core module in the ADR-003 sense (the prohibitions above apply to the five core modules), but it must still be simulable: all file I/O goes through the `Disk` SPI, so `LsmEngine` and the Raft Log Engine run unchanged on `SimDisk`. `FileChannel`, mmap and similar live only in the real `Disk` implementation; off-heap memory arenas are allowed.
 - Language level **21** for core modules, JDK **25 LTS** toolchain. Do not use APIs newer than 21 in core modules. `geodb-storage` may use the FFM API (`java.lang.foreign`).
 - Messages and commands are `record`s and `sealed interface`s; use exhaustive `switch` so an unhandled message type is a compile error.
 
@@ -218,15 +219,9 @@ Non-goals (do not build): Byzantine tolerance, SQL/secondary indexes, TrueTime/a
 
 **ADRs** live in `docs/adr/adr-NNNN-<slug>.md`, with Obsidian-style front matter (`title`, `tags: [architecture, adr]`, `project: GeoDB`, `repository: geodb`, `path`, `lang`, `date`, `id`) and sections: Context, Decision, Alternatives Considered, Consequences (Positive/Negative), References (with `[[wikilinks]]` to related ADRs). A decision with relevant alternatives gets its own ADR; to change one, write a new ADR with `supersedes`/`superseded_by`.
 
-**Known inconsistencies to resolve (report, do not silently work around):**
+**Known gaps (report, do not silently work around):**
 
-1. ADR-012's H1 reads `# ADR-002 Verification strategy...`; it should be `ADR-012`.
-2. Front-matter/typo nits: ADR-005 has `project: GeoDB]`; ADR-003 and ADR-010 have stray `]]]` in a wikilink.
-3. The General Description (4.6) describes transactions as "two-phase commit (prepare/confirm)". ADR-009 explicitly rejects classic 2PC with a coordinator in favor of the transaction record as commit point. Treat ADR-009 as authoritative and update the overview.
-4. The spec (10.2) says intents live "under the reserved ts 0"; ADR-008 says intents use an **empty version suffix**. Follow ADR-008 and fix the spec.
-5. The spec's ADR plan (section 21, 18 items) does not match the 13 ADRs written. Still **without a dedicated ADR**: joint consensus vs single-server change, deadlock detection strategy, node concurrency model, client-session idempotency, LSM comparison method. Write them before implementing the related feature.
-6. ADR-003 lists `storage` as not a core module, but ADR-006 requires `LsmEngine` to run on the simulated `Disk`. Interpretation to confirm: `geodb-storage` performs file I/O **only** through the `Disk` SPI so it is simulable; `FileChannel`/mmap live in the real `Disk` implementation; off-heap arenas (memory, not disk) are fine.
-7. Spec status says "Draft v0.1" while its front matter says `version: 1.0.0`.
+1. Five ADRs are still unwritten, listed at the end of spec section 21: joint consensus vs single-server change, deadlock detection, node concurrency model, client-session idempotency, and the LSM comparison method. Write each one before implementing the related feature.
 
 ## 13. Working agreements for agents
 

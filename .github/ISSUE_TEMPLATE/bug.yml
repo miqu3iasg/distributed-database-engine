@@ -1,0 +1,121 @@
+name: Bug
+description: "Wrong behavior, violated invariant, data loss, crash, or recovery failure. One bug per issue."
+title: "bug: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep it short and put the **repro first**. If an agent wrote this for you, cut it down to the repro before you post. See [CONTRIBUTING.md](https://github.com/OWNER/geodb/blob/main/CONTRIBUTING.md).
+
+        - A failing **simulation seed**, **checker violation**, or **fuzzing crash** belongs here: include the seed or input and the code version.
+        - Security vulnerabilities must **not** be reported here. Use a private security advisory.
+        - Use the [glossary](https://github.com/OWNER/geodb/blob/main/GLOSSARY.md) terms.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: The module where the bug appears to live.
+      options:
+        - geodb-raft
+        - geodb-env
+        - geodb-common
+        - geodb-storage (LSM, WAL, Raft Log Engine)
+        - geodb-mvcc
+        - geodb-range
+        - geodb-txn
+        - geodb-cluster
+        - geodb-proto / geodb-server
+        - geodb-client
+        - geodb-sim / geodb-lincheck
+        - geodb-bench / geodb-chaos
+        - specs/tla
+        - Not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Kind of failure
+      options:
+        - Data loss or corruption
+        - Safety violation (linearizability, isolation, or a Raft invariant)
+        - Liveness (no progress after faults stop)
+        - Crash or recovery failure
+        - Determinism leak (not reproducible from a seed)
+        - Performance regression
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: found-by
+    attributes:
+      label: How it was found
+      options:
+        - Deterministic simulation (seed)
+        - Linearizability or isolation checker
+        - Fuzzing
+        - Chaos test (real processes)
+        - Unit or property test
+        - TLA+ model checking
+        - Manual use
+        - Code review
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The commit SHA (or release) you ran. Many bugs are already fixed on `main`.
+      placeholder: 4588b32
+    validations:
+      required: true
+  - type: input
+    id: seed
+    attributes:
+      label: Seed and code version
+      description: "Required if found by simulation. Format: `seed + commit`, e.g. `4821903377112 @ 4588b32`. Otherwise write N/A."
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The smallest steps that show the bug, and what the system did. For a checker failure, paste the minimal violating history.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What should have happened, and which ADR, spec section, or invariant says so (if you know).
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: JDK version and vendor, OS, cluster size, relevant configuration (for example `max_clock_offset`, lease reads on or off).
+      placeholder: |
+        JDK 25 (Temurin), Ubuntu 24.04, 3 nodes, lease reads off
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or output
+      description: Relevant structured logs (`nodeId`, `rangeId`, `term`), stack trace, or checker output. Trim to what matters.
+      render: shell
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: This issue is about one problem.
+          required: true
+        - label: I searched open and closed issues for a duplicate.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

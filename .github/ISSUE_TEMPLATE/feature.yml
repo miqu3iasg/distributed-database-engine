@@ -1,0 +1,103 @@
+name: Feature or improvement
+description: "A change or addition within the planned scope and roadmap. One change per issue."
+title: "feat: "
+labels: [enhancement, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        GeoDB follows a phased roadmap with acceptance criteria, and a fixed list of non-goals. A request stays open only if it:
+
+        1. **Fits the scope**: it is not a non-goal (Byzantine tolerance, SQL or secondary indexes, TrueTime-style clocks, multi-tenancy or ACLs, beating RocksDB or CockroachDB on raw performance).
+        2. **Is not already decided**: it does not contradict an accepted ADR in [`docs/adr/`](https://github.com/OWNER/geodb/tree/main/docs/adr). To challenge a decision, use the **Design decision (ADR proposal)** template instead.
+
+        Features of later phases are accepted as ideas but are not worked on early.
+  - type: checkboxes
+    id: before
+    attributes:
+      label: Before filing
+      options:
+        - label: I read the specification and the relevant ADRs, and this is not a non-goal.
+          required: true
+        - label: This issue is about one change.
+          required: true
+        - label: I searched open and closed issues for a duplicate.
+          required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - geodb-raft
+        - geodb-env
+        - geodb-common
+        - geodb-storage
+        - geodb-mvcc
+        - geodb-range
+        - geodb-txn
+        - geodb-cluster
+        - geodb-proto / geodb-server
+        - geodb-client
+        - geodb-sim / geodb-lincheck
+        - geodb-bench / geodb-chaos
+        - docs / tooling / CI
+    validations:
+      required: true
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Roadmap phase
+      description: Where this belongs in the spec's roadmap.
+      options:
+        - "Phase 0: Foundations and skeleton"
+        - "Phase 1: Pure Raft"
+        - "Phase 2: Replicated KV and linearizability"
+        - "Phase 3: Own storage engine"
+        - "Phase 4: MVCC and single-range transactions (SI)"
+        - "Phase 5: Sharding and Multi-Raft"
+        - "Phase 6: Distributed transactions and Serializable"
+        - "Phase 7: Membership, rebalancing, operability"
+        - "Phase 8: Polish and evidence"
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What is missing or painful, and what grounded it (a failure you saw, a gap in a phase's acceptance criteria, a spec item not yet implemented). Be concrete.
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed change
+      description: The smallest change that addresses it. Describe the behavior; do not paste a full design or code.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches and why you prefer this one. Mention any ADR you checked.
+    validations:
+      required: false
+  - type: textarea
+    id: verification
+    attributes:
+      label: How it would be verified
+      description: "Which tests, invariants, seeds, or checker results would show it works and keeps the system correct under failure."
+    validations:
+      required: true
+  - type: dropdown
+    id: adr
+    attributes:
+      label: Does this need an ADR?
+      description: An ADR is needed when the change is hard to reverse, has real alternatives, or changes a correctness assumption.
+      options:
+        - "Yes"
+        - "No"
+        - Not sure
+    validations:
+      required: true

@@ -67,7 +67,8 @@ class DeterminismRules
      *
      * <p>Forbidden classes are {@code java.util.Random},
      * {@code java.util.concurrent.ThreadLocalRandom}, {@code java.util.UUID},
-     * {@code java.lang.Thread}, and anything under {@code java.nio.file}.
+     * {@code java.lang.Thread}, {@code java.lang.System}, and anything under
+     * {@code java.nio.file}.
      */
     private static final DescribedPredicate<JavaClass> FORBIDDEN_CLASSES = new DescribedPredicate<JavaClass>(
         "forbidden class in core module"
@@ -80,6 +81,7 @@ class DeterminismRules
                 || name.equals("java.util.concurrent.ThreadLocalRandom")
                 || name.equals("java.util.UUID")
                 || name.equals("java.lang.Thread")
+                || name.equals("java.lang.System")
                 || name.startsWith("java.nio.file.");
         }
     };
@@ -103,7 +105,10 @@ class DeterminismRules
      *
      * <p>Forbidden APIs include {@code java.util.Random},
      * {@code java.util.concurrent.ThreadLocalRandom}, {@code java.util.UUID},
-     * {@code java.lang.Thread}, and {@code java.nio.file.*}.
+     * {@code java.lang.Thread}, {@code java.lang.System} (which exposes
+     * {@code currentTimeMillis()} and {@code nanoTime()}), and
+     * {@code java.nio.file.*}. Core modules must reach time, randomness,
+     * threads, and disk only through the {@code geodb-env} SPI.
      */
     @ArchTest
     static final ArchRule no_forbidden_api_in_core = noClasses()

@@ -26,6 +26,16 @@
         <scope>import</scope>
       </dependency>
       <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit-junit5</artifactId>
+        <version>1.5.1</version>
+      </dependency>
+      <dependency>
+        <groupId>de.thetaphi</groupId>
+        <artifactId>forbiddenapis</artifactId>
+        <version>3.11</version>
+      </dependency>
+      <dependency>
         <groupId>dev.geodb</groupId>
         <artifactId>geodb-common</artifactId>
         <version>${project.version}</version>
@@ -46,6 +56,16 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.thetaphi</groupId>
+      <artifactId>forbiddenapis</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

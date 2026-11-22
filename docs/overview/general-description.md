@@ -143,14 +143,20 @@ eventos nunca volte atrás.
 Muitas operações precisam alterar mais de um dado de uma vez. O exemplo clássico é uma transferência
 bancária: debitar uma conta e creditar outra. Ou as duas coisas acontecem, ou nenhuma.
 
-Quando essas contas estão em ranges diferentes, em máquinas diferentes, o GeoDB usa um protocolo de
-**commit em duas fases**:
+Quando essas contas estão em ranges diferentes, em máquinas diferentes, o GeoDB não usa um
+coordenador separado que possa cair no meio do caminho. Cada escrita é primeiro registrada como
+**intenção provisória**, e o ponto de decisão é **um único registro de transação**, replicado no
+range da primeira chave escrita:
 
-1. **Preparar:** cada range envolvido confirma que consegue fazer sua parte.
-2. **Confirmar:** só depois que todos disseram sim, a transação é efetivada em todos.
+1. **Escrever as intenções:** cada range envolvido grava a sua parte como provisória.
+2. **Decidir:** o registro da transação passa a `COMMITTED` em uma única operação atômica. **Esse é o
+   instante em que a transação passa a valer**, mesmo que nenhuma intenção tenha sido convertida
+   ainda.
+3. **Resolver:** em segundo plano, as intenções viram dados definitivos nos ranges envolvidos.
 
 O estado da própria transação também é replicado, então a queda de uma máquina no meio do processo
-não deixa a operação "pela metade".
+não deixa a operação "pela metade": quem encontra uma intenção consulta o registro para saber o
+destino real da transação.
 
 ### 4.7 Recuperação de falhas
 
@@ -216,7 +222,7 @@ O projeto é construído em etapas, cada uma funcionando e testada antes da pró
 3. **Armazenamento em disco:** WAL e LSM-tree próprios.
 4. **Versões e transações em um range:** MVCC e relógio híbrido lógico.
 5. **Particionamento:** ranges, divisão automática e diretório.
-6. **Transações distribuídas:** commit em duas fases entre ranges.
+6. **Transações distribuídas:** registro de transação como ponto de commit entre ranges.
 7. **Gestão do cluster:** entrada e saída de nós, rebalanceamento.
 8. **Polimento:** métricas, benchmarks e documentação das decisões.
 

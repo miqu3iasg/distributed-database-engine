@@ -4,7 +4,7 @@ tags:
     - documentation
 related:
     - "[[general-description.md]]"
-version: 1.0.0
+version: 0.1.0
 date: 2026-11-22T12:17:57
 id: 1c8671e1-f2c7-42b5-b8c2-2257c4f7e437
 ---
@@ -16,7 +16,7 @@ id: 1c8671e1-f2c7-42b5-b8c2-2257c4f7e437
 | **Status**          | Rascunho v0.1                                                              |
 | **Linguagem**       | Java (21 como mínimo, 25 LTS recomendado)                                  |
 | **Natureza**        | Banco de dados distribuído, transacional, chave-valor ordenado, multi-Raft |
-| **Documento irmão** | `GeoDB-visao-geral.md` (explicação de alto nível)                          |
+| **Documento irmão** | `general-description.md` (explicação de alto nível)                        |
 
 Este documento define **o que será construído, com quais estruturas e por quê**. Onde uma decisão tem alternativas relevantes, ela é marcada como **[ADR]** e deve virar um registro de decisão próprio em `docs/adr/`.
 
@@ -511,9 +511,9 @@ Chave MVCC física:
 
 O timestamp é **invertido** (`~ts`) para que versões mais novas ordenem **antes** das antigas: um `Seek(user_key, readTs)` encontra a versão visível em uma única busca.
 
-O escape de `user_key` (byte `0x00` duplicado) garante que o separador seja inequívoco e preserve a ordem lexicográfica.
+O escape de `user_key` (cada `0x00` vira `0x00 0xFF`) garante que o terminador `0x00 0x01` seja inequívoco e preserve a ordem lexicográfica; duplicar o byte (`0x00 0x00`) quebraria a ordenação.
 
-Tipos de valor: `VALUE`, `TOMBSTONE`, `INTENT` (versão provisória com `TxnMeta`, sempre sob o ts `0` reservado, "uma intent por chave", como no CockroachDB).
+Tipos de valor: `VALUE`, `TOMBSTONE`, `INTENT` (versão provisória com `TxnMeta`, gravada com **sufixo de versão vazio** — portanto ordenada antes de toda versão com timestamp —, "uma intent por chave", como no CockroachDB).
 
 ### 10.3 Operações MVCC
 
@@ -957,26 +957,31 @@ Isso permite escrever bullets baseados em fatos medidos, e não em adjetivos.
 
 ## 21. Lista de ADRs e referências
 
-### ADRs a escrever (um por decisão)
+### ADRs escritos
 
-1. Java e versão-alvo
-2. Raft próprio vs biblioteca existente
-3. Log Raft dedicado vs compartilhar o LSM
-4. LSM próprio vs RocksDB (e como comparar)
-5. Núcleo determinístico e SPI `geodb-env`
-6. Estilo do `RaftNode` (Ready/Advance) e contrato de ordenação
-7. Joint consensus vs single-server change
-8. ReadIndex vs lease reads
-9. HLC vs TrueTime-like
-10. Codificação de chaves MVCC e política de GC
-11. Local do registro de transação e protocolo de commit
-12. SI primeiro, Serializable depois (e como o checker prova)
-13. Detecção de deadlock: grafo de espera vs timeout e prioridade
-14. Endereçamento de ranges (range 0 único vs meta1/meta2)
-15. Split sem cópia de dados (engine compartilhado por Store)
-16. Modelo de concorrência (workers por range, virtual threads só na borda)
-17. Idempotência por sessão de cliente
-18. Estratégia de testes: simulação, checker, caos, TLA+
+| ADR | Decisão |
+| --- | --- |
+| [ADR-0001](../adr/adr-0001-java-as-the-implementation-language.md) | Java como linguagem de implementação |
+| [ADR-0002](../adr/adr-0002-implement-raft-from-scratch-instead-of-adopting-a-library.md) | Raft próprio em vez de biblioteca existente |
+| [ADR-0003](../adr/adr-0003-deterministic-core-and-environment-spi.md) | Núcleo determinístico e SPI `geodb-env` |
+| [ADR-0004](../adr/adr-0004-io-free-raft-note-driven-by-a-ready-advance-contract.md) | `RaftNode` sem I/O, dirigido pelo contrato Ready/Advance |
+| [ADR-0005](../adr/adr-0005-share-raft-log-engine-separate-from-the-lsm-data-engine.md) | Engine de log Raft compartilhado, separado do LSM |
+| [ADR-0006](../adr/adr-0006-custom-lsm-engine-behind-a-kvengine-interface-with-rocksdb-as-fallback.md) | LSM próprio atrás de `KvEngine`, com RocksDB como fallback |
+| [ADR-0007](../adr/adr-0007-hybrid-logical-clock-for-transaction-timestamps.md) | Hybrid Logical Clock para timestamps de transação |
+| [ADR-0008](../adr/adr-0008-mvcc-key-encoding-with-inverted-timestamps.md) | Codificação de chaves MVCC com timestamps invertidos |
+| [ADR-0009](../adr/adr-0009-transaction-record-as-the-commit-point-with-snapshot-isolation-before.md) | Registro de transação como ponto de commit; SI antes de Serializable |
+| [ADR-0010](../adr/adr-0010-multi-raft-ranges-with-one-data-engine-per-store-and-splits-without-da.md) | Ranges Multi-Raft, um engine de dados por Store, split sem cópia |
+| [ADR-0011](../adr/adr-0011-readindex-for-linearizable-reads-with-lease-reads-as-a-later-optimizat.md) | ReadIndex para leituras linearizáveis; lease reads depois |
+| [ADR-0012](../adr/adr-0012-verification-strategy-deterministic-simulation-linearizability-and-iso.md) | Estratégia de verificação: simulação, checkers, TLA+, caos |
+| [ADR-0013](../adr/adr-0013-grpc-and-protobuf-for-transport-with-translation-at-the-module-boundar.md) | gRPC e Protobuf para transporte, com tradução na borda do módulo |
+
+### ADRs ainda por escrever (um por decisão)
+
+1. Mudança de membros: joint consensus vs single-server change (seção 6, item 12)
+2. Detecção de deadlock: grafo de espera distribuído vs timeout e prioridade (seção 11)
+3. Modelo de concorrência: workers por range, virtual threads só na borda (seção 14)
+4. Idempotência por sessão de cliente (seção 9.4)
+5. Método de comparação do LSM próprio com o RocksDB (seção 17)
 
 ### Referências essenciais
 

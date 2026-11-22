@@ -1,0 +1,72 @@
+name: Documentation
+description: "An error, gap, ambiguity, or contradiction in the docs. One problem per issue."
+title: "docs: "
+labels: [documentation, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Documents have a precedence when they disagree: **ADR > Technical Specification > General Description**. Contradictions between documents are valuable to report; please name both places.
+
+        Questions about how something works belong in [Discussions: Q&A](https://github.com/OWNER/geodb/discussions/categories/q-a), not here.
+  - type: dropdown
+    id: type
+    attributes:
+      label: What kind of problem
+      options:
+        - Contradiction between documents
+        - Factual error
+        - Missing information
+        - Unclear or ambiguous wording
+        - Broken link or front matter
+        - Glossary term missing or inconsistent
+        - Guide or template problem
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: doc
+    attributes:
+      label: Document
+      options:
+        - ADR
+        - Technical specification
+        - General description
+        - Guide (commits, PRs, documentation, testing)
+        - AGENTS.md or CLAUDE.md
+        - GLOSSARY.md or CONTRIBUTING.md
+        - README
+        - Javadoc or code comments
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: File and section, e.g. `ADR-0008`, or spec 10.2. For a contradiction, give both locations.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong
+      description: Quote or describe the problem and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+      description: What the text should say, or which document should win. Optional if you are unsure.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: This issue is about one problem.
+          required: true
+        - label: I searched open and closed issues for a duplicate.
+          required: true

@@ -1,0 +1,80 @@
+name: Test or verification gap
+description: "A missing test, invariant, fault, workload, or checker capability. One gap per issue."
+title: "test: "
+labels: [testing, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        GeoDB's value is *demonstrable* correctness, so gaps in verification are first-class. Use this for something the test strategy ([ADR-0012](https://github.com/OWNER/geodb/tree/main/docs/adr) and the [testing guidelines](https://github.com/OWNER/geodb/blob/main/docs/guides/testing-guidelines.md)) should catch but cannot yet.
+
+        If you found an actual bug, file a **Bug** instead and include the seed.
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Verification layer
+      options:
+        - Deterministic simulation (invariant)
+        - Nemesis fault or buggify point
+        - Workload
+        - Linearizability checker
+        - Isolation anomaly checker
+        - Property or model-based test
+        - Fuzzing target
+        - JCStress test
+        - Mutation testing (surviving mutants)
+        - TLA+ model
+        - Chaos test
+        - CI gate or tooling
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area under test
+      options:
+        - geodb-raft
+        - geodb-storage
+        - geodb-mvcc
+        - geodb-range
+        - geodb-txn
+        - geodb-cluster
+        - geodb-env / simulator itself
+        - geodb-lincheck itself
+        - geodb-server / geodb-client
+        - Cross-cutting
+    validations:
+      required: true
+  - type: textarea
+    id: gap
+    attributes:
+      label: What is not covered
+      description: The behavior, failure mode, or interleaving that no current test, invariant, or checker would catch. Name the real-world failure it corresponds to.
+    validations:
+      required: true
+  - type: textarea
+    id: detect
+    attributes:
+      label: How a bug here would be detected
+      description: The invariant, fault, workload, or checker change that closes the gap. If it is a test of a tester, describe the **injected bug** that must be detected.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Why it matters
+      description: Link to the ADR, spec section, phase acceptance criterion, or past bug that motivates it.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: This issue is about one gap.
+          required: true
+        - label: This does not ask to weaken or remove an existing invariant, checker, or CI gate.
+          required: true
+        - label: I searched open and closed issues for a duplicate.
+          required: true

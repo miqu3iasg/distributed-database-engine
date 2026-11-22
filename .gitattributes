@@ -1,0 +1,39 @@
+# Normalize line endings. Persisted-format tests pin exact bytes, so
+# text files must never pick up CRLF on checkout.
+* text=auto eol=lf
+
+# Text
+*.java      text eol=lf diff=java
+*.md        text eol=lf diff=markdown
+*.xml       text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+*.proto     text eol=lf
+*.tla       text eol=lf
+*.cfg       text eol=lf
+*.sh        text eol=lf
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# Binary: never normalize, never diff as text.
+# Golden files pin on-disk layouts (WAL record, SSTable block, MANIFEST edit, MVCC key).
+*.golden    binary
+*.bin       binary
+*.sst       binary
+*.wal       binary
+*.jar       binary
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.pdf       binary
+
+# Regression seeds are plain text and must stay byte-stable.
+sim/corpus/** text eol=lf
+
+# GitHub language stats and diff display
+docs/**              linguist-documentation
+docs/EVIDENCE.md     linguist-generated=true
+specs/tla/**         linguist-documentation=false
+**/generated/**      linguist-generated=true

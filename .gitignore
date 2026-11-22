@@ -1,0 +1,104 @@
+# --- Build output (Maven) ---
+target/
+*.class
+*.jar
+*.war
+*.log
+!sim/corpus/**/*.log
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# --- JVM diagnostics ---
+hs_err_pid*
+replay_pid*
+*.hprof
+*.jfr
+
+# --- IDEs ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+!.vscode/extensions.json
+.classpath
+.project
+.settings/
+.factorypath
+nbproject/
+.DS_Store
+Thumbs.db
+
+# --- Obsidian (keep shared config out; vault settings are personal) ---
+.obsidian/workspace*.json
+.obsidian/cache
+.trash/
+
+# --- Agent local files (commit shared settings, ignore personal ones) ---
+.claude/settings.local.json
+CLAUDE.local.md
+AGENTS.local.md
+
+# --- Local data directories (node data, WAL, SSTables, Raft log segments) ---
+data/
+/var/
+*.sst
+*.wal
+
+# --- Test and verification output ---
+# NOTE: sim/corpus/ (regression seeds) MUST stay tracked. Never ignore it.
+sim/out/
+sim/tmp/
+**/jqwik-database
+.jqwik-database
+jcstress-results/
+jazzer-corpus-tmp/
+.cifuzz-corpus/
+crash-*
+leak-*
+timeout-*
+pitest-reports/
+**/pit-reports/
+jacoco*.exec
+coverage/
+
+# --- Benchmarks (results worth keeping are recorded in docs/EVIDENCE.md by CI) ---
+jmh-result*.json
+jmh-result*.csv
+bench-out/
+
+# --- TLA+ / TLC ---
+specs/tla/states/
+specs/tla/**/*.toolbox/
+*.tlacache
+*_TTrace_*.tla
+*_TTrace_*.bin
+MC.out
+MC.tla
+MC.cfg
+
+# --- Docker / chaos ---
+chaos-out/
+.docker-data/
+docker-compose.override.yml
+
+# --- Secrets and local config ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+secrets/
+
+# --- Misc ---
+*.swp
+*.swo
+*~
+*.bak
+*.tmp

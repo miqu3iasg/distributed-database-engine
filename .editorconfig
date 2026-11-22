@@ -1,0 +1,41 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.java]
+indent_size = 4
+max_line_length = 120
+
+[*.xml]
+indent_size = 2
+
+[*.{yml,yaml,json,proto,tla,cfg}]
+indent_size = 2
+
+[*.{sh,bash}]
+indent_size = 2
+
+# Markdown: trailing double-space can be a hard line break; keep it.
+# Front matter in docs uses 4-space indentation for lists.
+[*.md]
+indent_size = 4
+trim_trailing_whitespace = false
+max_line_length = off
+
+[Makefile]
+indent_style = tab
+
+[*.{bat,cmd}]
+end_of_line = crlf
+
+# Binaries and byte-exact fixtures (WAL/SSTable/MANIFEST/MVCC goldens):
+# .gitattributes marks them binary and tests compare their bytes exactly.
+[{*.golden,*.bin,*.sst,*.wal,*.jar,*.png,*.jpg,*.jpeg,*.gif,*.pdf}]
+insert_final_newline = false
+trim_trailing_whitespace = false

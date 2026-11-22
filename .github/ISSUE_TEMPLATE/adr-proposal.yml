@@ -1,0 +1,77 @@
+name: Design decision (ADR proposal)
+description: "Propose a new architecture decision, or challenge an existing one. One decision per issue."
+title: "adr: "
+labels: [adr, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this to start the discussion **before** writing the ADR. If accepted, the decision is recorded in [`docs/adr/`](https://github.com/OWNER/geodb/tree/main/docs/adr) using the template in `docs/templates/adr-template.md`, following the [documentation guidelines](https://github.com/OWNER/geodb/blob/main/docs/guides/documentation-guidelines.md).
+
+        Write an ADR when a decision is hard to reverse, has real alternatives, constrains other modules, or changes a correctness assumption. Routine implementation choices do not need one.
+
+        Accepted ADRs are not rewritten: challenging one means proposing a **superseding** ADR, and you must engage with the reasons it gives.
+  - type: checkboxes
+    id: before
+    attributes:
+      label: Before filing
+      options:
+        - label: I read the related ADRs and the specification, and checked the alternatives they already rejected.
+          required: true
+        - label: This issue is about one decision.
+          required: true
+        - label: I searched open and closed issues for a duplicate.
+          required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - New decision (listed as pending in the spec)
+        - New decision (not in the spec)
+        - Supersede an existing ADR
+        - Record a decision not to do something
+    validations:
+      required: true
+  - type: input
+    id: related
+    attributes:
+      label: Related ADRs and spec sections
+      description: e.g. `ADR-0009`, spec 11.4 (deadlock detection). For a superseding proposal, name the ADR being superseded.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: The forces at play, the constraints, and why a decision is needed now.
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options considered
+      description: At least two real, plausible options, each with its main advantage and disadvantage. No strawmen.
+    validations:
+      required: true
+  - type: textarea
+    id: preferred
+    attributes:
+      label: Preferred option and trade-offs
+      description: Which option you would choose, what we accept to get what, and the honest downsides.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact and verification
+      description: Modules and formats affected, any persisted-format or protocol change, and how the decision would be tested (simulation, checker, TLA+, property tests).
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Papers, reference implementations, or prior art.
+    validations:
+      required: false
